@@ -1,9 +1,19 @@
 package com.samansepahvand.photoeditortest.utility;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.samansepahvand.photoeditortest.ui.activity.OutputImageActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class FileUtility {
 
@@ -53,4 +63,48 @@ public class FileUtility {
         }
         return null;
     }
+
+
+    private String saveImage(Bitmap image, File storageDir, String imageFileName, Context context){
+
+        String saveImagePath=null;
+
+        boolean isSuccess=true;
+
+        if (!storageDir.exists()){
+            isSuccess=storageDir.mkdirs();
+
+        }
+        if (isSuccess){
+            File imageFile=new File(storageDir,imageFileName);
+            saveImagePath=imageFile.getAbsolutePath();
+            try{
+
+                OutputStream fOut=new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100,fOut);
+                fOut.close();
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("TAG", "saveImage: " );
+            }
+            galleryAddPic(saveImagePath,context);
+          //  Toast.makeText(OutputImageActivity.this, "Image Save", Toast.LENGTH_SHORT).show();
+        }
+        return saveImagePath;
+    }
+
+    private void galleryAddPic(String saveImagePath, Context context) {
+
+        Intent mediaScanIntent=new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File file=new File(saveImagePath);
+
+        Uri contentUri=Uri.fromFile(file);
+
+        mediaScanIntent.setData(contentUri);
+
+        context.sendBroadcast(mediaScanIntent);
+
+    }
+
+
 }

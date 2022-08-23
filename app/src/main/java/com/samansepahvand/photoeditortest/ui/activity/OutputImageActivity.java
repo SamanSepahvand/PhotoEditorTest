@@ -1,17 +1,19 @@
-package com.samansepahvand.photoeditortest;
+package com.samansepahvand.photoeditortest.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.location.LocationRequestCompat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.samansepahvand.photoeditortest.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,7 +74,6 @@ private      String imgPath ;
                 File dir=new File(dirPath);
 
                 imgOutputImage.buildDrawingCache();
-
                 Bitmap bitmap=imgOutputImage.getDrawingCache();
                 saveImage(bitmap,dir,fileName);
 
@@ -102,6 +103,7 @@ private      String imgPath ;
                 fOut.close();
             }catch (Exception e){
                 e.printStackTrace();
+                Log.e("TAG", "saveImage: " );
             }
             galleryAddPic(saveImagePath);
             Toast.makeText(OutputImageActivity.this, "Image Save", Toast.LENGTH_SHORT).show();
@@ -113,8 +115,11 @@ private      String imgPath ;
 
         Intent mediaScanIntent=new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File file=new File(saveImagePath);
+
         Uri contentUri=Uri.fromFile(file);
+
         mediaScanIntent.setData(contentUri);
+
         sendBroadcast(mediaScanIntent);
 
     }
