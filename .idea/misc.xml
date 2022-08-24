@@ -3,8 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/ic_baseline_settings_24_white.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/ic_baseline_shopping_bag_24_white.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_button.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_circle_gray.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_circle_gray_all.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_circle_orange.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_circle_yellow.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_circle_yellow_all.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/drawable/shape_stroke_circlel.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/layout/activity_main.xml" value="0.3546875" />
         <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/layout/activity_output_image.xml" value="0.24139492753623187" />
-        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/layout/activity_splash_screen.xml" value="0.24139492753623187" />
+        <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/layout/activity_splash_screen.xml" value="0.25" />
         <entry key="..\:/Users/s.sepahvand/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/xml/file_paths.xml" value="0.17249240121580547" />
         <entry key="..\:/Users/shant/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/layout/activity_main.xml" value="0.178125" />
         <entry key="..\:/Users/shant/AndroidStudioProjects/PhotoEditorTest/app/src/main/res/layout/activity_output_image.xml" value="0.22" />

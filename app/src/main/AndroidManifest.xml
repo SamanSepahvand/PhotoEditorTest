@@ -25,9 +25,7 @@
         android:theme="@style/Theme.PhotoEditorTest">
 
 
-        <activity
-            android:name=".ui.activity.SplashScreen"
-            android:exported="false" />
+
         <activity
             android:name=".ui.activity.OutputImageActivity"
             android:exported="false" />
@@ -37,9 +35,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".ui.activity.SplashScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
 
 
         <provider
