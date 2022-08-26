@@ -11,7 +11,12 @@
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 
+
+
+
+
     <application
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,10 +30,6 @@
         android:theme="@style/Theme.PhotoEditorTest">
 
 
-
-        <activity
-            android:name=".ui.activity.OutputImageActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true">

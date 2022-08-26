@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,6 +32,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +40,8 @@ import android.widget.Toast;
 
 
 import com.samansepahvand.photoeditortest.R;
+import com.samansepahvand.photoeditortest.ui.fragment.MyPagerAdapter;
+import com.samansepahvand.photoeditortest.ui.fragment.ResultFragment;
 import com.samansepahvand.photoeditortest.utility.FileUtility;
 import com.wajahatkarim3.longimagecamera.LongImageCameraActivity;
 
@@ -50,14 +56,17 @@ import java.util.Date;
 
 import iamutkarshtiwari.github.io.ananas.editimage.EditImageActivity;
 import iamutkarshtiwari.github.io.ananas.editimage.ImageEditorIntentBuilder;
+import io.ak1.BubbleTabBar;
+import io.ak1.OnBubbleClickListener;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String mCurrentPhotpPath;
+public class MainActivity extends AppCompatActivity {
 
-    public static final int PERMISSION_REQUEST_CODE=5010;
+    private String mCurrentPhotpPath;
 
-    private ImageView imgGallery, imgCamera;
+    public static final int PERMISSION_REQUEST_CODE = 5010;
+
     //request code from gallery
     public static final int REQUEST_CODE_PICKER = 100;
     public static final int REQUEST_PICKER_LIBRARY = 500;
@@ -66,46 +75,132 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_PHOTO_EDIT = 231;
     public static final int CAMERA_REQUEST = 200;
 
+    ViewPager vpPager;
+
+    private OnAboutDataReceivedListener mAboutDataListener;
+    private OnMainDataReceivedListener onMainDataReceivedListener;
+
+
+    // new
+
+    private static final String TAG = "MainActivity";
+    private BubbleTabBar bubbleTabBar;
+    private MyPagerAdapter adapterViewPager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         initView();
 
 
     }
 
-
     private void initView() {
 
-        imgCamera = findViewById(R.id.img_camera);
-        imgGallery = findViewById(R.id.img_gallery);
 
+        vpPager = (ViewPager) findViewById(R.id.vpPager);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapterViewPager);
 
-        //onClick Handle
-
-        imgGallery.setOnClickListener(this);
-        imgCamera.setOnClickListener(this);
-
-
-        imgCamera.setOnLongClickListener(new View.OnLongClickListener() {
+        bubbleTabBar = findViewById(R.id.bubbleTabBar);
+        bubbleTabBar.addBubbleListener(new OnBubbleClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                editImage(getOriginalImagePath());
-                return false;
+            public void onBubbleClick(int i) {
+
+
+                String strID = new Integer(i).toString();
+                Log.d(TAG, strID);
+
+
+                Log.e(TAG, "onBubbleClick: " + i);
+
+                switch (i) {
+
+                    case R.id.item_gallery:
+                        //   vpPager.setCurrentItem(0);
+
+                        openGallery();
+                        break;
+                    case R.id.item_camera:
+                        //    vpPager.setCurrentItem(1);
+
+                        openCamera();
+
+
+                        break;
+                    case R.id.item_home:
+                        vpPager.setCurrentItem(0);
+
+
+                        break;
+                    case R.id.item_result:
+                        vpPager.setCurrentItem(1);
+
+
+                        break;
+                }
+
 
             }
         });
+
+
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            // This method will be invoked when a new page becomes selected.
+            @Override
+            public void onPageSelected(int position) {
+
+                switch (position) {
+
+                    case 0:
+                        bubbleTabBar.setSelectedWithId(R.id.item_home, false);
+                        onMainDataReceivedListener.onDataReceived(true);
+                        break;
+                    case 1:
+
+                        bubbleTabBar.setSelectedWithId(R.id.item_result, false);
+                        break;
+//                        bubbleTabBar.setSelectedWithId(R.id.item_gallery,false);
+//                        break;
+//                    case 2:
+//                        bubbleTabBar.setSelectedWithId(R.id.item_camera,false);
+//                        break;
+//
+//                    case 3:
+//                        bubbleTabBar.setSelectedWithId(R.id.item_result,false);
+//                        break;
+
+
+                }
+
+            }
+
+            // This method will be invoked when the current page is scrolled
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Code goes here
+            }
+
+            // Called when the scroll state changes:
+            // SCROLL_STATE_IDLE, SCROLL_STATE_DRAGGING, SCROLL_STATE_SETTLING
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Code goes here
+            }
+        });
+
 
         if (!checkPermission()) {
             requestPermission();
         }
 
-
-
     }
+
+
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED;
@@ -116,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ActivityCompat.requestPermissions(this, new String[]{CAMERA}, PERMISSION_REQUEST_CODE);
 
     }
-
 
 
     @Override
@@ -130,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if  (shouldShowRequestPermissionRationale(CAMERA)
+                            if (shouldShowRequestPermissionRationale(CAMERA)
 
 
                             ) {
@@ -187,35 +281,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.img_camera:
-
-                openCamera();
-                break;
-            case R.id.img_gallery:
-                openGallery();
-                break;
-
-        }
-    }
-
     private void openCamera() {
 
         try {
 
-            String fileName="photo";
-            File storageDirectory=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            String fileName = "photo";
+            File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             try {
                 File imageFile = File.createTempFile(fileName, ".jpg", storageDirectory);
-                mCurrentPhotpPath=imageFile.getAbsolutePath();
-             Uri imgUri=   FileProvider.getUriForFile(MainActivity.this,"com.samansepahvand.photoeditortest.fileprovider",imageFile);
-             Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-             intent.putExtra(MediaStore.EXTRA_OUTPUT,imgUri);
-             startActivityForResult(intent,CAMERA_REQUEST);
-            }catch (Exception e){
+                mCurrentPhotpPath = imageFile.getAbsolutePath();
+                Uri imgUri = FileProvider.getUriForFile(MainActivity.this, "com.samansepahvand.photoeditortest.fileprovider", imageFile);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                startActivityForResult(intent, CAMERA_REQUEST);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -225,18 +304,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-
     private void openGallery() {
 
         Intent intentGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intentGallery, REQUEST_CODE_PICKER);
     }
 
-
-
     public String getOriginalImagePath() {
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = managedQuery(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, null);
@@ -249,8 +324,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -258,10 +331,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (resultCode == -1 && requestCode == CAMERA_REQUEST) {
 
-            Bitmap bitmap= BitmapFactory.decodeFile(mCurrentPhotpPath);
-            imgCamera.setImageBitmap(bitmap);
-           editImage(mCurrentPhotpPath);
-
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotpPath);
+            editImage(mCurrentPhotpPath);
 
 
         }
@@ -270,7 +341,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String imgPath = data.getStringExtra(LongImageCameraActivity.IMAGE_PATH_KEY);
             editImage(imgPath);
         }
-
 
         //this block of code gallery
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_PICKER) {
@@ -295,11 +365,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 newFilePath = data.getStringExtra(ImageEditorIntentBuilder.SOURCE_PATH);
             }
-            startActivity(new Intent(getApplicationContext(), OutputImageActivity.class)
-                    .putExtra("imagePath", newFilePath));
+
+            if (newFilePath != null) {
+//    Bundle bundle = new Bundle();
+//    bundle.putString("imagePath", newFilePath);
+//    ResultFragment fragInfo = new ResultFragment();
+//    fragInfo.setArguments(bundle);
+
+                mAboutDataListener.onDataReceived(newFilePath);
+            }
+            vpPager.setCurrentItem(1);
 
         }
-
 
     }
 
@@ -327,11 +404,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         } catch (Exception e) {
-            Log.e("TAG", "editImage: "+e.getMessage() );
+            Log.e("TAG", "editImage: " + e.getMessage());
         }
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+    }
+
+    public interface OnAboutDataReceivedListener {
+        void onDataReceived(String photoUrl);
+    }
+
+    public void setAboutDataListener(OnAboutDataReceivedListener listener) {
+        this.mAboutDataListener = listener;
+    }
+
+
+    public interface OnMainDataReceivedListener {
+
+        void onDataReceived(boolean status);
+
+    }
+
+    public void setMainDataListener(OnMainDataReceivedListener listener) {
+        this.onMainDataReceivedListener = listener;
+    }
 
 
 }

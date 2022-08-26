@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.samansepahvand.photoeditortest"
-        minSdk 17
+        minSdk 22
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -43,6 +43,19 @@ dependencies {
     implementation 'com.github.iamutkarshtiwari:Ananas:1.2.4'
     implementation 'com.wajahatkarim3.LongImageCamera:LongImageCamera:1.0.2'
     implementation 'com.github.ihimanshurawat:ImageWorker:1.0'
+
+
+    implementation  'io.ak1:bubbletabbar:1.0.8'
+
+    ///calligraphy library =font all Ui
+//    def calligraphyVersion = "2.3.0"
+//    implementation "uk.co.chrisjenx:calligraphy:$calligraphyVersion"
+
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
+
+
+
 
 
 }

@@ -22,6 +22,10 @@
         <item name="android:layoutDirection">rtl</item>
 
     </style>
-
+    <style name="buttonStyle" parent="@android:style/Widget.Button.Small">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>
