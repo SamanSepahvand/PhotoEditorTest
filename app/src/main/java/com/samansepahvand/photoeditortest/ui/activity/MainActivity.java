@@ -43,7 +43,6 @@ import com.samansepahvand.photoeditortest.R;
 import com.samansepahvand.photoeditortest.ui.fragment.MyPagerAdapter;
 import com.samansepahvand.photoeditortest.ui.fragment.ResultFragment;
 import com.samansepahvand.photoeditortest.utility.FileUtility;
-import com.wajahatkarim3.longimagecamera.LongImageCameraActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,13 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
     //request code from gallery
     public static final int REQUEST_CODE_PICKER = 100;
-    public static final int REQUEST_PICKER_LIBRARY = 500;
-
-
     public static final int REQUEST_PHOTO_EDIT = 231;
     public static final int CAMERA_REQUEST = 200;
 
-    ViewPager vpPager;
+    private  ViewPager vpPager;
 
     private OnAboutDataReceivedListener mAboutDataListener;
     private OnMainDataReceivedListener onMainDataReceivedListener;
@@ -305,42 +301,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
-
         Intent intentGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intentGallery, REQUEST_CODE_PICKER);
     }
 
-    public String getOriginalImagePath() {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                projection, null, null, null);
-        int column_index_data = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToLast();
 
-        return cursor.getString(column_index_data);
 
-    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (resultCode == -1 && requestCode == CAMERA_REQUEST) {
-
-            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotpPath);
             editImage(mCurrentPhotpPath);
-
-
         }
-        //this block of code camera
-        if (resultCode == RESULT_OK && requestCode == LongImageCameraActivity.LONG_IMAGE_RESULT_CODE && data != null) {
-            String imgPath = data.getStringExtra(LongImageCameraActivity.IMAGE_PATH_KEY);
-            editImage(imgPath);
-        }
+
 
         //this block of code gallery
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_PICKER) {
@@ -359,18 +335,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_PHOTO_EDIT) {
             String newFilePath = data.getStringExtra(ImageEditorIntentBuilder.OUTPUT_PATH);
             boolean isImageEdit = data.getBooleanExtra(EditImageActivity.IS_IMAGE_EDITED, false);
-
-            if (isImageEdit) {
-
-            } else {
+            if (!isImageEdit) {
                 newFilePath = data.getStringExtra(ImageEditorIntentBuilder.SOURCE_PATH);
             }
-
             if (newFilePath != null) {
-//    Bundle bundle = new Bundle();
-//    bundle.putString("imagePath", newFilePath);
-//    ResultFragment fragInfo = new ResultFragment();
-//    fragInfo.setArguments(bundle);
 
                 mAboutDataListener.onDataReceived(newFilePath);
             }
@@ -383,9 +351,7 @@ public class MainActivity extends AppCompatActivity {
     private void editImage(String imgPath) {
 
         try {
-
             File outputFile = FileUtility.genEditFile();
-
             Intent intent = new ImageEditorIntentBuilder(MainActivity.this, imgPath, outputFile.getAbsolutePath())
                     .withAddText()
                     .withPaintFeature()
@@ -401,8 +367,6 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             EditImageActivity.start(MainActivity.this, intent, REQUEST_PHOTO_EDIT);
-
-
         } catch (Exception e) {
             Log.e("TAG", "editImage: " + e.getMessage());
         }

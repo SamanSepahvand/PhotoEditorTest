@@ -41,8 +41,8 @@ dependencies {
 
     //dependency
     implementation 'com.github.iamutkarshtiwari:Ananas:1.2.4'
-    implementation 'com.wajahatkarim3.LongImageCamera:LongImageCamera:1.0.2'
-    implementation 'com.github.ihimanshurawat:ImageWorker:1.0'
+  //  implementation 'com.wajahatkarim3.LongImageCamera:LongImageCamera:1.0.2'
+   // implementation 'com.github.ihimanshurawat:ImageWorker:1.0'
 
 
     implementation  'io.ak1:bubbletabbar:1.0.8'

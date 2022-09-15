@@ -23,8 +23,7 @@ public  class MyPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
         case 0: // Fragment # 0 - This will show FirstFragment
                return HomeFragment.newInstance("0", "Page # 1");
-//            case 1: // Fragment # 0 - This will show FirstFragment different title
-//                return ContactFragment.newInstance("1", "Page # 2");
+
             case 1: // Fragment # 1 - This will show SecondFragment
                 return ResultFragment.newInstance("1");
 
