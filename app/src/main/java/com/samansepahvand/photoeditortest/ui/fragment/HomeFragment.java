@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment implements MainActivity.OnMainDataRec
             }
 
             //Collections.sort(arrayListPath, Collections.reverseOrder());
-            recyclerView.setAdapter(new ImageLoaderAdapter(bitmaps, getActivity()));
+            recyclerView.setAdapter(new ImageLoaderAdapter(bitmaps,arrayListPath, getActivity()));
 
             if (arrayListPath.size() != 0) {
                 imgLastEdit.setImageBitmap(bitmaps.get(bitmaps.size()-1));
@@ -122,9 +122,13 @@ public class HomeFragment extends Fragment implements MainActivity.OnMainDataRec
                             imgLeft2.setImageBitmap(bitmaps.get(bitmaps.size()-2));
                             break;
                     }
+
                 }
             }
         }
+
+
+
     }
 
 
