@@ -122,6 +122,7 @@ public class ShowImageDialog extends Dialog  {
 
 
     }
+
     private String  ShowDisc(PhotoViewMetaModel photoViewMetaModel) {
 
             String data = "<b>Details</b> " +
